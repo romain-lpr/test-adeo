@@ -23,14 +23,26 @@ describe('filter test', () => {
         require('../app.js');
         expect(JSON.parse(console.log.mock.calls[0])).toEqual('Wrong arguments, only accept argument : filter, --filter, count, --count.')
     });
-    it('should show the animals matching with the ry string pattern', () => {
+    it('should show the animals matching with the ry string pattern with argument', () => {
         process.argv[2] = 'filter=ry';
         require('../app');
         expect(JSON.parse(console.log.mock.calls[0])).toEqual([{"name":"Uzuzozne","people":[{"name":"Lillie Abbott","animals":[{"name":"John Dory"}]}]},{"name":"Satanwi","people":[{"name":"Anthony Bruno","animals":[{"name":"Oryx"}]}]}]);
     });
-    it('should show that nothing has been found when no animals or people match the string pattern', () => {
+    it('should show that nothing has been found when no animals or people match the string pattern with argument', () => {
         process.argv[2] = 'filter=ryad';
         require('../app');
         expect(JSON.parse(console.log.mock.calls[0])).toEqual('Nothing found');
+    });
+    it('should show the animals matching with the ry string pattern without argument', () => {
+        process.argv[2] = ''
+        const {filter} = require('../app');
+        const result = filter('ry')
+        expect(result).toEqual([{"name":"Uzuzozne","people":[{"name":"Lillie Abbott","animals":[{"name":"John Dory"}]}]},{"name":"Satanwi","people":[{"name":"Anthony Bruno","animals":[{"name":"Oryx"}]}]}]);
+    });
+    it('should show that nothing has been found when no animals or people match the string pattern without argument', () => {
+        process.argv[2] = ''
+        const {filter} = require('../app');
+        const result = filter('ryad')
+        expect(result).toEqual('Nothing found');
     });
 });
