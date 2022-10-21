@@ -1,4 +1,3 @@
-process.argv.push('test')
 const {count,filter} = require('../app');
 
 describe('filter test', () => {

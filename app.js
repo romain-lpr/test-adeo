@@ -8,7 +8,7 @@ function isEmpty(arr) {
     return (Array.isArray(arr) && arr.length)
 }
 
-const validArgument = ['filter','--filter','count','--count', 'test', '--test']
+const validArgument = ['filter','--filter','count','--count']
 
 // This function filters out every animal that does not match the string pattern
 const removeNonMatching = (searchedStr, person) => {
@@ -74,9 +74,6 @@ try {
         }
         if(cmdNames.some((cmd => ['count','--count'].indexOf(cmd) !== -1))){
             result = count(result)
-        }
-        if(cmdNames.some((cmd => ['test', '--test'].indexOf(cmd) !== -1))){
-            result = 'Test in progress'
         }
     }
     console.log(JSON.stringify(result))
