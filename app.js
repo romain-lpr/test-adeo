@@ -8,6 +8,8 @@ function isEmpty(arr) {
     return (Array.isArray(arr) && arr.length)
 }
 
+const validArgument = ['filter','--filter','count','--count', 'test', '--test']
+
 // This function filters out every animal that does not match the string pattern
 const removeNonMatching = (searchedStr, person) => {
     return person.animals.map((animal) => {
@@ -32,13 +34,17 @@ const filter = (searchedStr) => {
         return (isEmpty(newCountry.people))
     });
 
-    // prints out the filtered list if there is any match
-    console.log((!isEmpty(newList)) ? 'Nothing found' : JSON.stringify(newList))
-    return (!isEmpty(newList)) ? 'Nothing found' : JSON.stringify(newList)
+    // return the filtered list if there is any match
+    return (!isEmpty(newList)) ? 'Nothing found' : newList
 }
 
-const count = () => {
-    const newList = data.map((country) => {
+const count = (list) => {
+    // recuperate all the data if no filtered list has been given
+    const listToCount = list || data
+    if(!Array.isArray(listToCount)){ // If the filtered list is empty, return Nothing found
+        return 'Nothing found'
+    }
+    const newList = listToCount.map((country) => {
         country.people.map((person) => {
             person.name = `${person.name} [${person.animals.length}]`
             return person
@@ -46,22 +52,34 @@ const count = () => {
         country.name = `${country.name} [${country.people.length}]`
         return country
     })
-    console.log(JSON.stringify(newList))
-    return JSON.stringify(newList)
+    return newList
 }
 
 // USAGE: node app.js --filter=[PATTERN] OR node app.js filter=[PATTERN]
 // USAGE: node app.js --count OR node app.js count
+// USAGE: node app.js --filter=[PATTERN] --count OR node app.js filter=[PATTERN] --count OR node app.js --filter=[PATTERN] count OR node app.js filter=[PATTERN] count
 
 try {
-    const cmd = args[2].split("=");
-    if (cmd[0] === '--filter' || cmd[0] === 'filter') {
-        filter(cmd[1])
-    } else if (cmd[0] === '--count' || cmd[0] === 'count') {
-        count()
+    let result
+    const cmds = args.slice(2).map(cmd => cmd.split('='))
+    const cmdNames = cmds.map(cmd => cmd[0])
+    if(!cmds[0]){
+        result = 'Arguments missing'
+    } else if(!cmdNames.every(cmd => validArgument.includes(cmd))){
+        result = 'Wrong arguments'
     } else {
-        console.log('Wrong arguments')
+        if(cmdNames.some((cmd => ['filter','--filter'].indexOf(cmd) !== -1))){
+            const filteredPattern = cmds.filter(cmd => ['filter','--filter'].includes(cmd[0]))[0][1]
+            result = filter(filteredPattern)
+        }
+        if(cmdNames.some((cmd => ['count','--count'].indexOf(cmd) !== -1))){
+            result = count(result)
+        }
+        if(cmdNames.some((cmd => ['test', '--test'].indexOf(cmd) !== -1))){
+            result = 'Test in progress'
+        }
     }
+    console.log(JSON.stringify(result))
 } catch(err) {
     throw err
 }
