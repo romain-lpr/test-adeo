@@ -8,6 +8,7 @@ function isEmpty(arr) {
     return (Array.isArray(arr) && arr.length)
 }
 
+// List all valid arguments of the application
 const validArgument = ['filter','--filter','count','--count']
 
 // This function filters out every animal that does not match the string pattern
@@ -66,7 +67,7 @@ try {
     if(!cmds[0]){
         result = 'Arguments missing'
     } else if(!cmdNames.every(cmd => validArgument.includes(cmd))){
-        result = 'Wrong arguments'
+        result = `Wrong arguments, only accept argument : ${validArgument.join(', ')}.`
     } else {
         if(cmdNames.some((cmd => ['filter','--filter'].indexOf(cmd) !== -1))){
             const filteredPattern = cmds.filter(cmd => ['filter','--filter'].includes(cmd[0]))[0][1]
